@@ -67,13 +67,9 @@
             /* Control the right side */
             .right {
                 right: 0;
-<<<<<<< HEAD
                 width: 30%;
-=======
-                width: 25%;
                 padding-left: 10px;
                 background-color: #1976D2;
->>>>>>> 88bb8a9e560a5522070b1e92b6d65d0333d5f528
             }
             
         </style>
@@ -91,49 +87,43 @@
 
         <div class="split left"></div>
         <div class="split right">
-<<<<<<< HEAD
-
-
             <div class="container">
-                <div align="right">
-                    <button type="button" name="load_data" id="load_data" class="btn btn-info">Load Data</button>
-                </div>
-                <div id="salesmen_table"></div>
+                    <h1>Meeting</h1>
+                    <br/>
+                    <form>
+                        Customer name:<br>
+                        <input type="text" name="firstname"><br>
+                        Location:<br>
+                        <input type="text" name="location"><br>
+                        Salesman:<br>
+                        <select name="salesman">
+                            <option value="Anna">Anna</option>
+                            <option value="Rasmus">Rasmus</option>
+                            <option value="Peter">Peter</option>
+                        </select><br>
+                        Date:<br>
+                        <input type="date" name="date"><br>
+                        Start time:<br>
+                        <input type="time" name="stime"><br>
+                        End Time:<br>
+                        <input type="time" name="etime"><br>
+                    </form><br>
+                    <button id="b1" onclick="newEntry()">press</button>
             </div>
-
-            <!-- This is the sidebar -->
-            <div id="wrapper">
-                    <nav id="sidebar">
+    
+                <!-- This is the sidebar -->
+                <div id="wrapper">
+                        <div align="right">
+                            <button type="button" name="load_data" id="load_data" class="btn btn-info">Load Data</button>
+                         </div>
                         <div id="salesmen_table"></div>
-                    </nav>
+                        <nav id="sidebar">
+                            <div id="salesmen_table"></div>
+                        </nav>
+                </div>
+    
             </div>
-
         </div>
-
-=======
-            <h1>Meeting</h1>
-            <br/>
-            <form>
-                Customer name:<br>
-                <input type="text" name="firstname"><br>
-                Location:<br>
-                <input type="text" name="location"><br>
-                Salesman:<br>
-                <select name="salesman">
-                    <option value="Anna">Anna</option>
-                    <option value="Rasmus">Rasmus</option>
-                    <option value="Peter">Peter</option>
-                </select><br>
-                Date:<br>
-                <input type="date" name="date"><br>
-                Start time:<br>
-                <input type="time" name="stime"><br>
-                End Time:<br>
-                <input type="time" name="etime"><br>
-            </form><br>
-            <button id="b1" onclick="newEntry()">press</button>
-        </div>
->>>>>>> 88bb8a9e560a5522070b1e92b6d65d0333d5f528
         <script>
             var width = window.innerWidth*0.75,
                 height = window.innerHeight,
@@ -231,7 +221,7 @@
 
                 svg.transition();
 
-                svg.selectAll("circle")
+               svg.selectAll("circle")
                 .data(csvData).enter()
                 .append("circle")
                 .attr("cx", function (d) { console.log(projection(d)); return projection(d)[0]; })
@@ -252,7 +242,6 @@
                         .duration(500)		
                         .style("opacity", 0);
                 });
-
             }
 
             function clicked(d) {
@@ -310,10 +299,7 @@
                 return day+'-'+month+'-'+year;
             }
         </script>
-<<<<<<< HEAD
  
-=======
->>>>>>> 88bb8a9e560a5522070b1e92b6d65d0333d5f528
     </body>
 </html>
 
