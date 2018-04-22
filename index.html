@@ -30,7 +30,43 @@
             
             path:hover {
             fill: #feb24c;
-            }                
+            }              
+
+            body {
+                margin: 0;
+                height: 100%;
+                overflow: hidden;
+            }
+            div.tooltip {	
+                position: absolute;			
+                text-align: left;					
+                padding: 2px;				
+                font: 12px sans-serif;		
+                background: lightsteelblue;	
+                border: 0px;		
+                border-radius: 8px;			
+                pointer-events: none;			
+            } 
+            .split {
+                height: 100%;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                overflow-x: hidden;
+            }
+
+            /* Control the left side */
+            .left {
+                left: 0;
+                width: 75%;
+            }
+
+            /* Control the right side */
+            .right {
+                right: 0;
+                width: 25%;
+                background-color: red;
+            }
         </style>
         <title>Geo Planner</title>
     </head>
@@ -40,20 +76,25 @@
         <script src="//d3js.org/d3.v4.min.js"></script>
         <!--<script src="https://d3js.org/topojson.v1.min.js"></script> -->
 
+        <div class="split left"></div>
+        <div class="split right"></div>
         <script>
-
-            var width = window.innerWidth,
+            var width = window.innerWidth*0.75,
                 height = window.innerHeight,
                 active = d3.select(null),
-                svg,
                 path;
 
             var zoom = d3.zoom()
                 .scaleExtent([1, 8])
                 .on("zoom", zoomed);
-                        
-            d3.json("data/kommuner.geojson", (err, geoJson) => {
-            svg = d3.select("body").append("svg")
+
+            // Define the div for the tooltip
+            var div = d3.select("body").append("div")	
+                .attr("class", "tooltip")				
+                .style("opacity", 0);
+            
+            var svg = d3.select(".split")
+                .filter(".left").append("svg")
                 .attr("width", width)
                 .attr("height", height)
                 .on("click", stopped, true)
@@ -64,14 +105,25 @@
                 .attr("width", "100%")
                 .attr("heigth", "100%")
                 .on("click", reset);
-            
-            /* projection for the map  */
+
+            var g = svg.append("g");
+
             var projection = d3.geoMercator()
+                .scale(5000)
+                .precision(.1)
+                .center([10.349506, 55.834041])
+                .translate( [width / 2, height / 2]);
+
+            var path = d3.geoPath().projection(projection);
+
+            d3.json("data/kommuner.geojson", (err, geoJson) => {
+
+            /* update projection for the map  */
+            projection = d3.geoMercator()
                 .fitExtent([[0, 0], [width, height]], geoJson);
 
             path = d3.geoPath()
                 .projection(projection);
-
             /* draw the path on the canvas  */
             svg.selectAll('path')
                 .data(geoJson.features)
@@ -79,10 +131,35 @@
                 .append('path')
                 .attr('d', path)
                 .attr("class", "feature")
-                .on("click", clicked)
-                ;});
-            
+                .on("click", clicked);
+
+            skylab = [12.512719631195068, 55.78164135669716, "red", "IVISYS", "Rasmus", "25-04-2018 13:40", "25-04-2018 15:20"];
+            solroed = [12.205126957861467,55.525455359571914, "blue", "IBM", "Peter", "27-04-2018 09:00", "27-04-2018 13:10"];
+            console.log(skylab);
+            svg.selectAll("circle")
+                .data([skylab, solroed]).enter()
+                .append("circle")
+                .attr("cx", function (d) { console.log(projection(d)); return projection(d)[0]; })
+		        .attr("cy", function (d) { return projection(d)[1]; })
+                .attr("r", "4px")
+                .attr("fill", function(d) { return d[2]})
+                .on("mouseover", function(d){
+                div.transition()		
+                    .duration(200)		
+                    .style("opacity", .9);
+                div	.html("Customer:  " +  d[3] + "<br/>" + "Salesman:  " + d[4]
+                            + "<br/>" + "<br/>" + "Start Time: " + d[5] + "<br/>" + "End Time: " + d[6])	
+                    .style("left", (d3.event.pageX) + "px")		
+                    .style("top", (d3.event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(d){
+                    div.transition()		
+                        .duration(500)		
+                        .style("opacity", 0);
+                });
+                });
             svg.call(zoom);
+
             function clicked(d) {
                 if (active.node() === this) return reset();
                 active.classed("active", false);
@@ -93,7 +170,7 @@
                     dy = bounds[1][1] - bounds[0][1],
                     x = (bounds[0][0] + bounds[1][0]) / 2,
                     y = (bounds[0][1] + bounds[1][1]) / 2,
-                    scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
+                    scale = Math.max(1, Math.min(8, 0.4 / Math.max(dx / width, dy / height))),
                     translate = [width / 2 - scale * x, height / 2 - scale * y];
 
                 svg.transition()
@@ -120,6 +197,7 @@
             function stopped() {
                 if (d3.event.defaultPrevented) d3.event.stopPropagation();
             }
+
         </script>
         <!-- Optional JavaScript for Boostrap -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
