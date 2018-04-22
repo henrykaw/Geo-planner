@@ -9,7 +9,6 @@
 
         <!-- Boostrap CSS-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">     
-
         
         <style>
 
@@ -100,6 +99,9 @@
                             <option value="Anna">Anna</option>
                             <option value="Rasmus">Rasmus</option>
                             <option value="Peter">Peter</option>
+                            <option value="Kasper">Kasper</option>
+                            <option value="David">David</option>
+                            <option value="Henrik">Henrik</option>
                         </select><br>
                         Date:<br>
                         <input type="date" name="date"><br>
@@ -125,7 +127,7 @@
             </div>
         </div>
         <script>
-            var width = window.innerWidth*0.75,
+            var width = window.innerWidth*0.70,
                 height = window.innerHeight,
                 active = d3.select(null),
                 path;
@@ -162,9 +164,20 @@
 
             var path = d3.geoPath().projection(projection);
 
-            skylab = [12.512719631195068, 55.78164135669716, "red", "IVISYS", "Rasmus", "25-04-2018", "13:40", "15:20"];
-            solroed = [12.205126957861467,55.525455359571914, "blue", "IBM", "Peter", "27-04-2018", "09:00", "13:10"];
-            var csvData = [skylab, solroed];
+            r1 = [12.512719631195068, 55.78164135669716, "red", "company1", "Rasmus", "25-04-2018", "13:40", "15:20"];
+            r2 = [12.570044, 55.69008569787225, "red", "company2", "Rasmus", "25-04-2018", "08:40", "11:20"];
+            r3 = [12.353063987500036, 55.81682909849984, "red", "company3", "Rasmus", "26-04-2018", "08:00", "12:00"];
+            r4 = [12.496212890972743, 56.030456, "red", "company4", "Rasmus", "28-04-2018", "13:40", "15:20"];
+            p1 = [12.205126957861467,55.525455359571914, "blue", "company1", "Peter", "22-04-2018", "09:00", "13:10"];
+            p2 = [12.3774661852392, 55.30285217428786, "blue", "company2", "Peter", "30-04-2018", "09:00", "13:10"];
+            p3 = [11.983561324429502,55.25034956364019, "blue", "company3", "Peter", "07-05-2018", "19:00", "20:10"];
+            p4 = [10.896659212514919, 55.063434626150325, "blue", "company4", "Peter", "05-05-2018", "09:00", "13:10"];
+            a1 = [9.024089616187666, 56.54692736103118, "green", "company1", "Anna", "15-04-2018", "09:00", "13:10"];
+            a2 = [9.721721452125166, 55.89026361090006, "green", "company2", "Anna", "25-04-2018", "8:00", "13:10"];
+            a3 = [9.968352107200985, 56.56123606877051, "green", "company3", "Anna", "26-04-2018", "09:00", "13:10"];
+            a4 = [8.717728506589651, 56.973063834691686, "green", "company4", "Anna", "26-04-2018", "14:00", "16:10"];
+            
+            var csvData = [r1, r2, r3, r4, p1, p2, p3, p4, a1, a2, a3, a4];
 
             d3.json("data/kommuner.geojson", (err, geoJson) => {
 
@@ -183,7 +196,7 @@
                 .attr("class", "feature")
                 .on("click", clicked);
 
-            console.log(skylab);
+            console.log(r1);
             svg.selectAll("circle")
                 .data(csvData).enter()
                 .append("circle")
@@ -219,7 +232,6 @@
                 csvData.push([12.397009300000036, 55.7310905, "red", cname, sman, formatDate(date), stime, etime]);
                 console.log(csvData);
 
-                svg.transition();
 
                svg.selectAll("circle")
                 .data(csvData).enter()
@@ -307,7 +319,7 @@
     $(document).ready(function(){
         $('#load_data').click(function(){
             $.ajax({
-                url:"salesmen.csv",
+                url:"data/salesmen.csv",
                 dataType:"text",
                 contentType : "application/x-www-form-urlencoded; charset=iso-8859-1",
                 success:function(data)
